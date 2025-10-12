@@ -1,6 +1,12 @@
 # Soughbreighittee - Comprehensive Harm Reduction and Addiction Recovery App
 
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: PEP 8](https://img.shields.io/badge/code%20style-PEP%208-orange.svg)](https://www.python.org/dev/peps/pep-0008/)
+
 A comprehensive tool for exploring recovery methods for Opiate Use Disorder (OUD), providing detailed information and comparison of all known recovery approaches with a focus on harm reduction.
+
+---
 
 ## ⚠️ MEDICAL DISCLAIMER
 
@@ -146,8 +152,15 @@ The goal is informed choice - providing complete information so individuals and 
 
 ## 🤝 Contributing
 
-This project aims to be the most comprehensive resource available. Contributions are welcome:
+This project aims to be the most comprehensive resource available. Contributions are welcome!
 
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
+- Adding or updating recovery methods
+- Code contributions and style guidelines
+- Testing requirements
+- Sensitive content considerations
+
+Quick contribution areas:
 - **Method Information**: Additional recovery methods or updated information
 - **Evidence Updates**: New research or clinical data
 - **Resource Links**: Treatment centers, support organizations, educational materials
