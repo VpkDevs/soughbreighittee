@@ -11,6 +11,7 @@ qualified healthcare providers for any medical concerns.
 
 __version__ = "0.1.0"
 __author__ = "Soughbreighittee Contributors"
+__all__ = ["__version__", "__author__", "EMERGENCY_CONTACTS", "DISCLAIMER"]
 
 # Emergency contacts and crisis resources
 EMERGENCY_CONTACTS = {

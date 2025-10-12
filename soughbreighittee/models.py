@@ -7,6 +7,16 @@ from typing import List, Optional, Literal
 from pydantic import BaseModel, Field
 from enum import Enum
 
+__all__ = [
+    "MethodCategory",
+    "EvidenceLevel",
+    "SafetyLevel",
+    "AccessibilityLevel",
+    "RecoveryMethod",
+    "UserProgress",
+    "Resource",
+]
+
 
 class MethodCategory(str, Enum):
     """Categories of recovery methods."""

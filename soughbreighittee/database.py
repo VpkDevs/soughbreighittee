@@ -8,6 +8,14 @@ for Opiate Use Disorder, including both evidence-based and alternative approache
 from typing import Dict, List
 from .models import RecoveryMethod, MethodCategory, EvidenceLevel, SafetyLevel, AccessibilityLevel, Resource
 
+__all__ = [
+    "get_all_methods",
+    "get_methods_by_category",
+    "get_method_by_id",
+    "search_methods",
+    "get_crisis_resources",
+]
+
 
 # Comprehensive database of recovery methods
 RECOVERY_METHODS_DB: Dict[str, RecoveryMethod] = {

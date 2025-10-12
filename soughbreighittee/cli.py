@@ -97,6 +97,8 @@ def display_method_detail(method_id: str) -> None:
         method = get_method_by_id(method_id)
     except ValueError as e:
         console.print(f"[red]Error: {e}[/red]")
+        console.print(f"[dim]Try searching for methods: soughbreighittee search {method_id}[/dim]")
+        console.print(f"[dim]Or list all methods: soughbreighittee list[/dim]")
         return
 
     # Main method information
@@ -343,6 +345,11 @@ def search(query):
       soughbreighittee search therapy
       soughbreighittee search "harm reduction"
     """
+    if not query.strip():
+        console.print("[yellow]Please provide a search query.[/yellow]")
+        console.print("[dim]Example: soughbreighittee search methadone[/dim]")
+        return
+    
     console.print(f"[bold]Searching for methods matching '{query}'...[/bold]\n")
     
     results = search_methods(query)
