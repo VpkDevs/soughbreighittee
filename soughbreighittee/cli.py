@@ -24,8 +24,15 @@ from .database import (
 
 console = Console()
 
+# Constants
+MIN_EFFECTIVENESS_RATING = 1
+MAX_EFFECTIVENESS_RATING = 10
+EFFECTIVENESS_THRESHOLD_HIGH = 7
+EFFECTIVENESS_THRESHOLD_MEDIUM = 5
+MAX_COMPARE_METHODS = 5
 
-def show_disclaimer():
+
+def show_disclaimer() -> None:
     """Display the medical disclaimer."""
     disclaimer_panel = Panel(
         DISCLAIMER,
@@ -36,7 +43,7 @@ def show_disclaimer():
     console.print()
 
 
-def show_emergency_contacts():
+def show_emergency_contacts() -> None:
     """Display emergency contacts."""
     emergency_text = "\n".join([
         f"• {name}: [bold]{contact}[/bold]"
@@ -52,7 +59,7 @@ def show_emergency_contacts():
     console.print()
 
 
-def display_method_summary(methods: List):
+def display_method_summary(methods: List) -> None:
     """Display a table summary of methods."""
     if not methods:
         console.print("[yellow]No methods found matching your criteria.[/yellow]")
@@ -69,8 +76,8 @@ def display_method_summary(methods: List):
 
     for method in methods:
         # Color code effectiveness rating
-        effectiveness_color = "green" if method.effectiveness_rating >= 7 else "yellow" if method.effectiveness_rating >= 5 else "red"
-        effectiveness = f"[{effectiveness_color}]{method.effectiveness_rating}/10[/{effectiveness_color}]"
+        effectiveness_color = "green" if method.effectiveness_rating >= EFFECTIVENESS_THRESHOLD_HIGH else "yellow" if method.effectiveness_rating >= EFFECTIVENESS_THRESHOLD_MEDIUM else "red"
+        effectiveness = f"[{effectiveness_color}]{method.effectiveness_rating}/{MAX_EFFECTIVENESS_RATING}[/{effectiveness_color}]"
         
         table.add_row(
             method.name,
@@ -84,7 +91,7 @@ def display_method_summary(methods: List):
     console.print(table)
 
 
-def display_method_detail(method_id: str):
+def display_method_detail(method_id: str) -> None:
     """Display detailed information about a specific method."""
     try:
         method = get_method_by_id(method_id)
@@ -109,7 +116,7 @@ def display_method_detail(method_id: str):
     
     metrics_table.add_row("Evidence Level:", f"[blue]{method.evidence_level.value}[/blue]")
     metrics_table.add_row("Safety Level:", f"[yellow]{method.safety_level.value}[/yellow]")
-    metrics_table.add_row("Effectiveness Rating:", f"[red]{method.effectiveness_rating}/10[/red]")
+    metrics_table.add_row("Effectiveness Rating:", f"[red]{method.effectiveness_rating}/{MAX_EFFECTIVENESS_RATING}[/red]")
     metrics_table.add_row("Accessibility:", f"[green]{method.accessibility.value}[/green]")
     
     if method.typical_duration:
@@ -243,9 +250,17 @@ def emergency():
               help='Filter by safety level')
 @click.option('--accessibility', type=click.Choice([ac.name for ac in AccessibilityLevel]),
               help='Filter by accessibility')
-@click.option('--min-effectiveness', type=click.IntRange(1, 10), help='Minimum effectiveness rating (1-10)')
+@click.option('--min-effectiveness', type=click.IntRange(MIN_EFFECTIVENESS_RATING, MAX_EFFECTIVENESS_RATING), 
+              help=f'Minimum effectiveness rating ({MIN_EFFECTIVENESS_RATING}-{MAX_EFFECTIVENESS_RATING})')
 def list(category, evidence, safety, accessibility, min_effectiveness):
-    """List all available recovery methods with optional filters."""
+    """List all available recovery methods with optional filters.
+    
+    Examples:
+      soughbreighittee list
+      soughbreighittee list --category MEDICAL_ASSISTED_TREATMENT
+      soughbreighittee list --evidence HIGH --min-effectiveness 7
+      soughbreighittee list --safety SAFE
+    """
     
     methods = get_all_methods()
     
@@ -308,14 +323,26 @@ def categories():
 @cli.command()
 @click.argument('method_id')
 def show(method_id):
-    """Show detailed information about a specific method."""
+    """Show detailed information about a specific method.
+    
+    Examples:
+      soughbreighittee show methadone
+      soughbreighittee show naloxone
+      soughbreighittee show buprenorphine
+    """
     display_method_detail(method_id)
 
 
 @cli.command()
 @click.argument('query')
 def search(query):
-    """Search for recovery methods by keyword."""
+    """Search for recovery methods by keyword.
+    
+    Examples:
+      soughbreighittee search methadone
+      soughbreighittee search therapy
+      soughbreighittee search "harm reduction"
+    """
     console.print(f"[bold]Searching for methods matching '{query}'...[/bold]\n")
     
     results = search_methods(query)
@@ -341,7 +368,7 @@ def compare():
     # Get methods to compare
     methods_to_compare = []
     
-    while len(methods_to_compare) < 5:  # Limit to 5 for readability
+    while len(methods_to_compare) < MAX_COMPARE_METHODS:  # Limit for readability
         method_name = Prompt.ask(
             f"Enter method name or ID to compare ({len(methods_to_compare)} selected)"
             f"{'[press Enter to finish]' if methods_to_compare else ''}"
