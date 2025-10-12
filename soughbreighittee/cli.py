@@ -6,7 +6,7 @@ Main command-line interface for exploring recovery methods for Opiate Use Disord
 """
 
 import sys
-from typing import List, Optional
+from typing import List
 import click
 from rich.console import Console
 from rich.table import Table
@@ -56,6 +56,7 @@ def display_method_summary(methods: List):
     """Display a table summary of methods."""
     if not methods:
         console.print("[yellow]No methods found matching your criteria.[/yellow]")
+        console.print("[dim]Try adjusting your filters or use 'list' without filters to see all methods.[/dim]")
         return
 
     table = Table(show_header=True, header_style="bold magenta")
@@ -242,7 +243,7 @@ def emergency():
               help='Filter by safety level')
 @click.option('--accessibility', type=click.Choice([ac.name for ac in AccessibilityLevel]),
               help='Filter by accessibility')
-@click.option('--min-effectiveness', type=int, help='Minimum effectiveness rating (1-10)')
+@click.option('--min-effectiveness', type=click.IntRange(1, 10), help='Minimum effectiveness rating (1-10)')
 def list(category, evidence, safety, accessibility, min_effectiveness):
     """List all available recovery methods with optional filters."""
     

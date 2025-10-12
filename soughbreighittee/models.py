@@ -3,7 +3,7 @@ Data models for the Soughbreighittee recovery app.
 """
 
 from datetime import datetime
-from typing import List, Dict, Optional, Literal
+from typing import List, Optional, Literal
 from pydantic import BaseModel, Field
 from enum import Enum
 
