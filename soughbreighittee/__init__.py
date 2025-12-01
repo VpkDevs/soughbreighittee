@@ -9,7 +9,7 @@ professional medical advice, diagnosis, or treatment. Always seek the advice of
 qualified healthcare providers for any medical concerns.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "Soughbreighittee Contributors"
 
 # Emergency contacts and crisis resources
@@ -17,17 +17,27 @@ EMERGENCY_CONTACTS = {
     "National Suicide Prevention Lifeline": "988",
     "SAMHSA National Helpline": "1-800-662-4357",
     "Crisis Text Line": "Text HOME to 741741",
+    "Veterans Crisis Line": "988 then press 1",
+    "Poison Control": "1-800-222-1222",
     "National Overdose Prevention Network": "https://www.overdoselifeline.org/",
 }
 
 DISCLAIMER = """
-MEDICAL DISCLAIMER: The information provided in this application is for educational 
-and informational purposes only and is not intended as medical advice. This content 
-should not be used to replace professional medical advice, diagnosis, or treatment. 
+⚠️ MEDICAL DISCLAIMER ⚠️
+
+The information provided in this application is for educational and informational 
+purposes only and is not intended as medical advice. This content should not be 
+used to replace professional medical advice, diagnosis, or treatment. 
+
 Always consult with qualified healthcare providers regarding any medical condition 
 or treatment options. If you are experiencing a medical emergency, call 911 immediately.
 
 The creators of this application are not medical professionals and do not endorse 
 any specific treatment methods. Users are encouraged to work with healthcare 
 providers to develop appropriate treatment plans.
+
+🆘 IF YOU ARE IN CRISIS:
+• Call 988 (Suicide & Crisis Lifeline)
+• Text HOME to 741741 (Crisis Text Line)
+• Call 911 for medical emergencies
 """
