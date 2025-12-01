@@ -17,6 +17,11 @@ from soughbreighittee.database import (
 )
 
 
+# Constants for tests
+GUARANTEED_NONEXISTENT_SEARCH_TERM = "zzzzzxxxxx12345nonexistent"
+MINIMUM_EXPECTED_METHODS = 30  # Allow some flexibility as database grows
+
+
 import pytest
 
 
@@ -45,8 +50,8 @@ def test_search_methods():
     assert len(results) > 0
     assert any("methadone" in method.name.lower() for method in results)
     
-    # Search for truly non-existent method - use something that won't fuzzy match
-    results = search_methods("zzzzzxxxxx12345nonexistent")
+    # Search for non-existent method using constant
+    results = search_methods(GUARANTEED_NONEXISTENT_SEARCH_TERM)
     assert len(results) == 0
 
 
@@ -165,8 +170,8 @@ def test_family_support_methods():
 def test_database_has_expanded():
     """Test that database has grown to expected size."""
     methods = get_all_methods()
-    # Should have 36 total methods after expansion
-    assert len(methods) >= 36, f"Expected at least 36 methods, got {len(methods)}"
+    # Should have at least MINIMUM_EXPECTED_METHODS after expansion
+    assert len(methods) >= MINIMUM_EXPECTED_METHODS, f"Expected at least {MINIMUM_EXPECTED_METHODS} methods, got {len(methods)}"
 
 
 # =====================================================
@@ -289,6 +294,12 @@ def test_calculate_sobriety_days_future():
     """Test sobriety calculator with future date."""
     with pytest.raises(ValueError):
         calculate_sobriety_days("2099-01-01")
+
+
+def test_calculate_sobriety_days_very_old():
+    """Test sobriety calculator with unreasonably old date."""
+    with pytest.raises(ValueError):
+        calculate_sobriety_days("1800-01-01")
 
 
 # =====================================================

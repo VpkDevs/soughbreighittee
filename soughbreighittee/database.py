@@ -2547,8 +2547,12 @@ def _get_synonym_matches(query: str) -> List[str]:
 
 def _fuzzy_match(query: str, text: str, threshold: float = 0.6) -> bool:
     """Simple fuzzy matching - checks if query is substantially contained in text."""
-    query_lower = query.lower()
+    query_lower = query.lower().strip()
     text_lower = text.lower()
+    
+    # Handle empty query
+    if not query_lower:
+        return False
     
     # Direct containment
     if query_lower in text_lower:
@@ -2558,7 +2562,11 @@ def _fuzzy_match(query: str, text: str, threshold: float = 0.6) -> bool:
     query_words = set(query_lower.split())
     text_words = set(text_lower.split())
     
-    if query_words and len(query_words.intersection(text_words)) / len(query_words) >= threshold:
+    # Guard against empty sets (e.g., whitespace-only query)
+    if not query_words:
+        return False
+    
+    if len(query_words.intersection(text_words)) / len(query_words) >= threshold:
         return True
     
     return False
@@ -2750,6 +2758,9 @@ def calculate_sobriety_days(sobriety_date_str: str) -> Dict[str, int]:
     
     Returns:
         Dictionary with days, weeks, months, and years
+        
+    Raises:
+        ValueError: If date is invalid, in the future, or unreasonably old
     """
     try:
         sobriety_date = datetime.strptime(sobriety_date_str, "%Y-%m-%d").date()
@@ -2758,8 +2769,14 @@ def calculate_sobriety_days(sobriety_date_str: str) -> Dict[str, int]:
     
     today = date.today()
     
+    # Validate date is not in the future
     if sobriety_date > today:
         raise ValueError("Sobriety date cannot be in the future")
+    
+    # Validate date is within reasonable bounds (not more than 100 years ago)
+    min_date = date(today.year - 100, today.month, today.day)
+    if sobriety_date < min_date:
+        raise ValueError("Sobriety date cannot be more than 100 years in the past")
     
     delta = today - sobriety_date
     total_days = delta.days

@@ -69,17 +69,34 @@ def show_emergency_contacts():
     console.print()
 
 
-def get_safety_styled(safety_level: SafetyLevel) -> str:
-    """Get a styled string for safety level with appropriate color."""
+def get_safety_styled(safety_level: SafetyLevel, show_icon: bool = True) -> str:
+    """Get a styled string for safety level with appropriate color.
+    
+    Args:
+        safety_level: The safety level to style
+        show_icon: Whether to show icons (warning/check)
+        
+    Returns:
+        A Rich-formatted string with appropriate styling
+    """
     color = SAFETY_COLORS.get(safety_level, "white")
     level_text = safety_level.value.split(" - ")[0]
     
     if safety_level in [SafetyLevel.HIGH_RISK, SafetyLevel.DANGEROUS]:
-        return f"[{color}]⚠️ {level_text} ⚠️[/{color}]"
+        if show_icon:
+            return f"[{color}]⚠️ {level_text}[/{color}]"
+        return f"[{color}]{level_text}[/{color}]"
     elif safety_level == SafetyLevel.SAFE:
-        return f"[{color}]✓ {level_text}[/{color}]"
+        if show_icon:
+            return f"[{color}]✓ {level_text}[/{color}]"
+        return f"[{color}]{level_text}[/{color}]"
     else:
         return f"[{color}]{level_text}[/{color}]"
+
+
+def is_high_risk_method(safety_level: SafetyLevel) -> bool:
+    """Check if a method has high-risk or dangerous safety level."""
+    return safety_level in [SafetyLevel.HIGH_RISK, SafetyLevel.DANGEROUS]
 
 
 def display_method_summary(methods: List, show_hints: bool = True):
@@ -101,13 +118,8 @@ def display_method_summary(methods: List, show_hints: bool = True):
         effectiveness_color = "green" if method.effectiveness_rating >= 7 else "yellow" if method.effectiveness_rating >= 5 else "red"
         effectiveness = f"[{effectiveness_color}]{method.effectiveness_rating}/10[/{effectiveness_color}]"
         
-        # Color code safety
-        safety_color = SAFETY_COLORS.get(method.safety_level, "white")
-        safety_text = method.safety_level.value.split(" - ")[0]
-        if method.safety_level in [SafetyLevel.HIGH_RISK, SafetyLevel.DANGEROUS]:
-            safety_display = f"[{safety_color}]⚠️ {safety_text}[/{safety_color}]"
-        else:
-            safety_display = f"[{safety_color}]{safety_text}[/{safety_color}]"
+        # Color code safety using shared utility function
+        safety_display = get_safety_styled(method.safety_level)
         
         # Truncate long names
         name_display = method.name if len(method.name) <= 35 else method.name[:32] + "..."
@@ -144,7 +156,7 @@ def display_method_detail(method_id: str):
             return
 
     # High-risk warning if applicable
-    if method.safety_level in [SafetyLevel.HIGH_RISK, SafetyLevel.DANGEROUS]:
+    if is_high_risk_method(method.safety_level):
         warning_text = f"⚠️ WARNING: This method is classified as {method.safety_level.value}.\n"
         warning_text += "Please consult healthcare professionals before considering this approach."
         console.print(Panel(warning_text, title="[bold red]⚠️ SAFETY WARNING ⚠️[/bold red]", border_style="bold red"))
